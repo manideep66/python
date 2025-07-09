@@ -1,4 +1,4 @@
-
+ 
 CREATE TABLE DEPT (
     DEPTNO NUMBER(2) PRIMARY KEY,
     DNAME VARCHAR2(14),
@@ -311,40 +311,76 @@ select ename,sal from emp where sal = (select min(sal) from emp);
 
 -- 64. Find employees who earn more than their manager
 
+SELECT e.ename,m.ename from emp e join emp m on e.mgr=m.EMPNO where e.sal>m.sal;
+
 -- 65. Find employees in the same department as 'SCOTT'
+
+SELECT ename from emp where deptno = (SELECT deptno from emp where ename='SCOTT');
 
 -- 66. Find employees with the same job as 'FORD'
 
+SELECT ename from emp where job= (SELECT JOB from emp WHERE ename='FORD');
+
 -- 67. Find employees hired after 'SCOTT'
+
+SELECT ename FROM emp WHERE hiredate> (SELECT hiredate FROM emp WHERE ename = 'SCOTT');
 
 -- 68. Find employees with salary greater than any employee in department 30
 
+SELECT ename from emp where sal > (select min(sal) from emp where deptno=30);
+
 -- 69. Find employees with salary greater than all employees in department 30
+
+SELECT ename from emp where sal > (select max(sal) from emp where deptno=30) and deptno != 30;
 
 -- 70. Find departments with more employees than department 10
 
+SELECT deptno, COUNT(*) AS emp_count FROM emp GROUP BY deptno HAVING COUNT(*) > (SELECT COUNT(*) FROM emp WHERE deptno = 10);
+
 -- 71. Find employees who have the same salary as someone else
+
+select ename from emp where sal in (select sal from emp group by sal having count(*) > 1);
 
 -- 72. Find employees who don't have any subordinates
 
+SELECT empno,ename from emp where empno NOT IN (SELECT DISTINCT mgr from emp where mgr is not NULL) ;
+
 -- 73. Find employees who have subordinates
+
+SELECT empno,ename from emp where empno  IN (SELECT DISTINCT mgr from emp where mgr is not NULL) ;
 
 -- 74. Find the second highest salary
 
+select * from emp order by sal desc LIMIT 1 OFFSET 1;
+
 -- 75. Find the third highest salary
+
+select * from emp order by sal desc LIMIT 1 OFFSET 2;
 
 -- 76. Find employees with salary in top 3
 
+select * from emp order by sal desc LIMIT 3;
+
 -- 77. Find employees who earn more than the average salary in their department
+
+SELECT ename FROM emp e WHERE sal > ( SELECT AVG(sal) FROM emp WHERE deptno = e.deptno);
 
 -- 78. Find employees who earn more than the average salary in their job
 
+SELECT ename FROM emp e WHERE sal > ( SELECT AVG(sal) FROM emp WHERE job = e.job);
+
 -- 79. Find departments where all employees earn more than 1000
+
+SELECT deptno FROM emp group by deptno having min(sal)>1000;
 
 -- 80. Find jobs where all employees earn less than 3000
 
+SELECT job FROM emp group by deptno having max(sal)>3000;
+
 -- ADVANCED QUERIES (81-100)
 -- 81. Find the employee with the highest salary in each department
+
+
 
 -- 82. Find the employee with the lowest salary in each job
 
